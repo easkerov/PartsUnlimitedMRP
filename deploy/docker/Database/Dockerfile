@@ -1,6 +1,6 @@
 FROM mongo
 
-MAINTAINER juliens@microsoft.com
+MAINTAINER emaskero@microsoft.com
 
 COPY drop/* /tmp/
 

@@ -1,0 +1,46 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: mrp-back
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mrp-back
+    spec:
+      containers:
+      - name: db
+        image: devopsdemoregistry.azurecr.io/db:v2
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: mongodb-persistent-storage
+          mountPath: /data/db  
+      volumes:
+      - name: mongodb-persistent-storage
+        persistentVolumeClaim:
+          claimName: mongodb-pv-claim
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: mrp-front
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mrp-front
+    spec:
+      containers:
+      - name: order
+        image: devopsdemoregistry.azurecr.io/order:v2
+        ports:
+        - containerPort: 8888
+      - name: web
+        image: devopsdemoregistry.azurecr.io/web:v1
+        ports:
+        - containerPort: 8080
+
